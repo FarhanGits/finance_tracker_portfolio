@@ -34,14 +34,14 @@ class FortifyServiceProvider extends ServiceProvider
         $this->configureViews();
         $this->configureRateLimiting();
 
-        // Fortify::authenticateUsing(function(Request $request) {
-        //     $user = User::where('user_email', $request->email)->first();
-        //     if ($user && Hash::check($request->password, $user->user_password))
-        //     {
-        //         return $user;
-        //     }
-        //     return null;
-        // });
+        Fortify::authenticateUsing(function(Request $request) {
+            $user = User::where('user_email', $request->email)->first();
+            if ($user && Hash::check($request->password, $user->user_password))
+            {
+                return $user;
+            }
+            return null;
+        });
     }
 
     /**
