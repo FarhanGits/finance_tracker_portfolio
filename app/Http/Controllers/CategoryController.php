@@ -12,6 +12,12 @@ class CategoryController extends Controller
 {
     public function CreateCategory(Request $request) {
         $input = $request->all();
+        $isAlreadyHave = Category::where('category_name', $input['category_name'])->exists();
+        $isUserCreated = Category::where('user_id', Auth::user()->user_id);
+
+        if ($isAlreadyHave && $isUserCreated) {
+            return redirect()->route('track-cashflow');
+        }
         $data = [
             'category_id' => 'CTGR-' . Str::ulid(),
             'user_id' => Auth::user()->user_id,
