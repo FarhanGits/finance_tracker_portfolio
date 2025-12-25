@@ -23,6 +23,8 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { CategoryList } from '@/types';
+import { useForm, usePage } from '@inertiajs/react';
 import { BanknoteArrowDown, CalendarIcon } from 'lucide-react';
 import { useState } from 'react';
 import { AddCategory } from './add-category';
@@ -50,40 +52,63 @@ export function InputExpense() {
     const [month, setMonth] = useState<Date | undefined>(date);
     const [value, setValue] = useState(formatDate(date));
 
+    const { props } = usePage<{ categories: CategoryList[] }>();
+    const all_categories = props.categories;
+    const user_id = props.user_id;
+
+    const { data, setData, post } = useForm({
+        category_id: '',
+        transaction_date: '',
+        transaction_amount: '',
+        transaction_type: 'expense',
+        transaction_method: '',
+        transaction_note: '',
+    });
+
+    function submitTransaction(e: React.FormEvent) {
+        e.preventDefault();
+
+        post('/create-transaction');
+    }
+
     return (
         <div className="w-full rounded-xl border p-5">
-            <form method="POST" action={''}>
-                <input type="hidden" name="type" value={'expense'} />
-                <FieldGroup>
+            <FieldGroup>
+                <div className="flex items-center justify-between max-sm:flex-col">
+                    <div className="flex gap-4">
+                        <BanknoteArrowDown />
+                        <FieldLegend>Input Your Expense</FieldLegend>
+                    </div>
+                    <div className="flex gap-4">
+                        <AddCategory type="expense" />
+                    </div>
+                </div>
+                <FieldDescription>
+                    Ensure to fill all field to track your expense precisely!
+                </FieldDescription>
+                <form onSubmit={submitTransaction}>
+                    <input
+                        type="hidden"
+                        name="transaction_type"
+                        value={data.transaction_type}
+                    />
+
                     <FieldSet>
-                        <div className="flex items-center justify-between">
-                            <div className="flex gap-4">
-                                <BanknoteArrowDown />
-                                <FieldLegend>Input Your Expense</FieldLegend>
-                            </div>
-                            <div className="flex gap-4">
-                                <AddCategory type="expense" />
-                            </div>
-                        </div>
-                        <FieldDescription>
-                            Ensure to fill all field to track your expense
-                            precisely!
-                        </FieldDescription>
                         <FieldGroup>
                             <div className="flex gap-4">
+                                {/* Date Input */}
                                 <Field>
                                     <FieldLabel htmlFor="expense-date">
                                         Date
                                     </FieldLabel>
 
-                                    {/* Date Input */}
                                     <div className="relative flex gap-2">
                                         {/* Date Input Button */}
                                         <Input
                                             id="date"
+                                            name="transaction_date"
                                             value={value}
-                                            placeholder="June 01, 2025"
-                                            className="border-blue-600 bg-background pr-10"
+                                            className="bg-background pr-10"
                                             onChange={(e) => {
                                                 const date = new Date(
                                                     e.target.value,
@@ -92,6 +117,11 @@ export function InputExpense() {
                                                 if (isValidDate(date)) {
                                                     setDate(date);
                                                     setMonth(date);
+
+                                                    setData(
+                                                        'transaction_date',
+                                                        e.target.value,
+                                                    );
                                                 }
                                             }}
                                             onKeyDown={(e) => {
@@ -100,6 +130,7 @@ export function InputExpense() {
                                                     setOpen(true);
                                                 }
                                             }}
+                                            required
                                         />
 
                                         {/* Date Input Pop-up */}
@@ -143,52 +174,90 @@ export function InputExpense() {
                                         </Popover>
                                     </div>
                                 </Field>
+
+                                {/* Amount Input */}
                                 <Field>
                                     <FieldLabel htmlFor="expense-amount">
                                         Amount
                                     </FieldLabel>
                                     <Input
                                         id="expense-amount"
+                                        value={data.transaction_amount}
                                         type="number"
-                                        placeholder="Input expense amount"
+                                        placeholder="Input amount"
                                         name="transaction_amount"
-                                        className="border-blue-600"
+                                        onChange={(e) =>
+                                            setData(
+                                                'transaction_amount',
+                                                e.target.value,
+                                            )
+                                        }
                                         required
                                     />
                                 </Field>
                             </div>
                             <div className="flex gap-4">
+                                {/* Category Input */}
                                 <Field>
                                     <FieldLabel htmlFor="expense-category">
                                         Category
                                     </FieldLabel>
-                                    <Select defaultValue="">
-                                        <SelectTrigger
-                                            id="expense-category"
-                                            className="border-blue-600"
-                                        >
-                                            <SelectValue placeholder="Choose income category" />
+                                    <Select
+                                        defaultValue=""
+                                        name="category_id"
+                                        value={data.category_id}
+                                        onValueChange={(e) =>
+                                            setData('category_id', e)
+                                        }
+                                    >
+                                        <SelectTrigger id="expense-category">
+                                            <SelectValue placeholder="Choose category" />
                                         </SelectTrigger>
-                                        <SelectContent className="border-blue-600">
-                                            <SelectItem value="category_111">
-                                                Category 1
-                                            </SelectItem>
+                                        <SelectContent>
+                                            {all_categories
+                                                .filter(
+                                                    (category) =>
+                                                        category.category_type ===
+                                                            'expense' &&
+                                                        (category.user_id ===
+                                                            null ||
+                                                            category.user_id ===
+                                                                user_id),
+                                                )
+                                                .map((category) => (
+                                                    <SelectItem
+                                                        key={
+                                                            category.category_id
+                                                        }
+                                                        value={
+                                                            category.category_id
+                                                        }
+                                                    >
+                                                        {category.category_name}
+                                                    </SelectItem>
+                                                ))}
                                         </SelectContent>
                                     </Select>
                                     {/* <FieldDescription>Enter your 16-digit card number</FieldDescription> */}
                                 </Field>
+
+                                {/* Method Input */}
                                 <Field>
                                     <FieldLabel htmlFor="expense-method">
                                         Expense Method
                                     </FieldLabel>
-                                    <Select defaultValue="">
-                                        <SelectTrigger
-                                            id="expense-method"
-                                            className="border-blue-600"
-                                        >
-                                            <SelectValue placeholder="Choose expense method" />
+                                    <Select
+                                        defaultValue=""
+                                        name="transaction_method"
+                                        value={data.transaction_method}
+                                        onValueChange={(e) =>
+                                            setData('transaction_method', e)
+                                        }
+                                    >
+                                        <SelectTrigger id="expense-method">
+                                            <SelectValue placeholder="Choose method" />
                                         </SelectTrigger>
-                                        <SelectContent className="border-blue-600">
+                                        <SelectContent>
                                             <SelectItem value="method_111">
                                                 Method 1
                                             </SelectItem>
@@ -197,29 +266,38 @@ export function InputExpense() {
                                     {/* <FieldDescription>Enter your 16-digit card number</FieldDescription> */}
                                 </Field>
                             </div>
+
+                            {/* Note Input */}
                             <Field>
                                 <FieldLabel htmlFor="expense-note">
                                     Note
                                 </FieldLabel>
                                 <Textarea
                                     id="expense-note"
+                                    name="transaction_note"
+                                    value={data.transaction_note}
+                                    onChange={(e) =>
+                                        setData(
+                                            'transaction_note',
+                                            e.target.value,
+                                        )
+                                    }
                                     placeholder="Add any additional note by detail, because there are no 'Expense Name'"
-                                    className="resize-none border-blue-600"
                                 />
                             </Field>
                         </FieldGroup>
+
+                        <FieldSeparator />
+
+                        <Button
+                            type="submit"
+                            className="w-fit cursor-pointer bg-gradient-to-br from-blue-500 to-blue-600 text-base"
+                        >
+                            Add Expense
+                        </Button>
                     </FieldSet>
-
-                    <FieldSeparator />
-
-                    <Button
-                        type="submit"
-                        className="w-fit cursor-pointer bg-gradient-to-br from-blue-500 to-blue-600 text-base hover:bg-green-700"
-                    >
-                        Add Expense
-                    </Button>
-                </FieldGroup>
-            </form>
+                </form>
+            </FieldGroup>
         </div>
     );
 }
