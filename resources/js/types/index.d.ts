@@ -41,3 +41,20 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+// For Transaction Purpose
+export interface CategoryList {
+    category_id: string;
+    user_id: string;
+    category_name: string;
+    category_type: 'income' | 'expense';
+}
+
+export interface TransactionList {
+    transaction_id: string;
+    transaction_date: string;
+    transaction_amount: number;
+    transaction_type: string;
+    category_name: string;
+    transaction_note: string;
+}

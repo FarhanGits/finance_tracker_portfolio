@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { useForm } from '@inertiajs/react';
 import { SquarePlus } from 'lucide-react';
 import React from 'react';
-// import { route } from 'ziggy-js';
+import { route } from 'ziggy-js';
 import { Input } from './ui/input';
 
 interface TransactionTypeProps {
@@ -28,8 +28,7 @@ export function AddCategory({ type }: TransactionTypeProps) {
     function submitCategory(e: React.FormEvent) {
         e.preventDefault();
 
-        // post(route('category.create'));
-        post('/create-category');
+        post(route('category.create'));
     }
 
     return (
@@ -37,7 +36,7 @@ export function AddCategory({ type }: TransactionTypeProps) {
             <AlertDialogTrigger asChild>
                 <Button
                     variant="outline"
-                    className="cursor-pointer hover:border-0 hover:bg-black hover:text-white"
+                    className="cursor-pointer hover:bg-black hover:text-white"
                 >
                     <SquarePlus /> Add{' '}
                     {type.charAt(0).toUpperCase() + type.slice(1)} Category
@@ -70,11 +69,15 @@ export function AddCategory({ type }: TransactionTypeProps) {
                             setData('category_name', e.target.value)
                         }
                         placeholder="Add new category"
+                        required
                     />
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogCancel className="h-fit w-fit border-none bg-transparent p-0">
-                            <Button type="submit">Create</Button>
+                        <AlertDialogCancel
+                            type="submit"
+                            className="cursor-pointer bg-black text-white"
+                        >
+                            Create
                         </AlertDialogCancel>
                     </AlertDialogFooter>
                 </form>

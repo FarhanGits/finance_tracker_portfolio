@@ -15,10 +15,11 @@ return new class extends Migration
             $table->string('transaction_id')->primary();
             $table->string('user_id')->nullable();
             $table->string('category_id')->nullable();
+            $table->date('transaction_date');
+            $table->enum('transaction_type', ['income', 'expense']);
             $table->integer('transaction_amount');
             $table->enum('transaction_method', ['cash', 'e-wallet', 'bank-transfer', 'credit-card', 'other']);
             $table->string('transaction_note', 500)->nullable();
-            $table->date('transaction_date');
             $table->timestamps();
 
             $table->foreign('user_id')->references('user_id')->on('users')->nullOnDelete();

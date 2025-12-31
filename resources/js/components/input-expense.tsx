@@ -26,7 +26,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { CategoryList } from '@/types';
 import { useForm, usePage } from '@inertiajs/react';
 import { BanknoteArrowDown, CalendarIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { route } from 'ziggy-js';
 import { AddCategory } from './add-category';
 
 function formatDate(date: Date | undefined) {
@@ -46,15 +47,37 @@ function isValidDate(date: Date | undefined) {
     return !isNaN(date.getTime());
 }
 
+function toLocalDate(date: Date | undefined) {
+    if (!date) {
+        return '';
+    }
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}
+
+interface TransactionPageProps {
+    categories: CategoryList[];
+    user_id: string;
+    transaction_methods: string[];
+
+    [key: string]: unknown;
+}
+
+function capitalize(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 export function InputExpense() {
     const [open, setOpen] = useState(false);
     const [date, setDate] = useState<Date | undefined>(new Date());
     const [month, setMonth] = useState<Date | undefined>(date);
     const [value, setValue] = useState(formatDate(date));
 
-    const { props } = usePage<{ categories: CategoryList[] }>();
-    const all_categories = props.categories;
-    const user_id = props.user_id;
+    const { categories, user_id, transaction_methods } =
+        usePage<TransactionPageProps>().props;
 
     const { data, setData, post } = useForm({
         category_id: '',
@@ -65,10 +88,17 @@ export function InputExpense() {
         transaction_note: '',
     });
 
+    useEffect(() => {
+        if (data.transaction_date) return;
+
+        const today = new Date();
+        setData('transaction_date', toLocalDate(today));
+    }, [data.transaction_date, setData]);
+
     function submitTransaction(e: React.FormEvent) {
         e.preventDefault();
 
-        post('/create-transaction');
+        post(route('transaction.create'));
     }
 
     return (
@@ -87,6 +117,7 @@ export function InputExpense() {
                     Ensure to fill all field to track your expense precisely!
                 </FieldDescription>
                 <form onSubmit={submitTransaction}>
+                    {/* Hidden Type Input */}
                     <input
                         type="hidden"
                         name="transaction_type"
@@ -120,7 +151,7 @@ export function InputExpense() {
 
                                                     setData(
                                                         'transaction_date',
-                                                        e.target.value,
+                                                        toLocalDate(date),
                                                     );
                                                 }
                                             }}
@@ -166,6 +197,10 @@ export function InputExpense() {
                                                         setDate(date);
                                                         setValue(
                                                             formatDate(date),
+                                                        );
+                                                        setData(
+                                                            'transaction_date',
+                                                            toLocalDate(date),
                                                         );
                                                         setOpen(false);
                                                     }}
@@ -214,7 +249,7 @@ export function InputExpense() {
                                             <SelectValue placeholder="Choose category" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {all_categories
+                                            {categories
                                                 .filter(
                                                     (category) =>
                                                         category.category_type ===
@@ -258,9 +293,16 @@ export function InputExpense() {
                                             <SelectValue placeholder="Choose method" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="method_111">
-                                                Method 1
-                                            </SelectItem>
+                                            {transaction_methods.map(
+                                                (method) => (
+                                                    <SelectItem
+                                                        key={method}
+                                                        value={method}
+                                                    >
+                                                        {capitalize(method)}
+                                                    </SelectItem>
+                                                ),
+                                            )}
                                         </SelectContent>
                                     </Select>
                                     {/* <FieldDescription>Enter your 16-digit card number</FieldDescription> */}

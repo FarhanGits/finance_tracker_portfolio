@@ -26,7 +26,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { CategoryList } from '@/types';
 import { useForm, usePage } from '@inertiajs/react';
 import { BanknoteArrowUp, CalendarIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { route } from 'ziggy-js';
 import { AddCategory } from './add-category';
 
 function formatDate(date: Date | undefined) {
@@ -39,11 +40,35 @@ function formatDate(date: Date | undefined) {
         year: 'numeric',
     });
 }
+
+function toLocalDate(date: Date | undefined) {
+    if (!date) {
+        return '';
+    }
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}
+
 function isValidDate(date: Date | undefined) {
     if (!date) {
         return false;
     }
     return !isNaN(date.getTime());
+}
+
+interface TransactionPageProps {
+    categories: CategoryList[];
+    user_id: string;
+    transaction_methods: string[];
+
+    [key: string]: unknown;
+}
+
+function capitalize(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 export function InputIncome() {
@@ -52,9 +77,8 @@ export function InputIncome() {
     const [month, setMonth] = useState<Date | undefined>(date);
     const [value, setValue] = useState(formatDate(date));
 
-    const { props } = usePage<{ categories: CategoryList[] }>();
-    const all_categories = props.categories;
-    const user_id = props.user_id;
+    const { categories, user_id, transaction_methods } =
+        usePage<TransactionPageProps>().props;
 
     const { data, setData, post } = useForm({
         category_id: '',
@@ -65,10 +89,17 @@ export function InputIncome() {
         transaction_note: '',
     });
 
+    useEffect(() => {
+        if (data.transaction_date) return;
+
+        const today = new Date();
+        setData('transaction_date', toLocalDate(today));
+    }, [data.transaction_date, setData]);
+
     function submitTransaction(e: React.FormEvent) {
         e.preventDefault();
 
-        post('/create-transaction');
+        post(route('transaction.create'));
     }
 
     return (
@@ -87,11 +118,13 @@ export function InputIncome() {
                     Ensure to fill all field to track your income precisely!
                 </FieldDescription>
                 <form onSubmit={submitTransaction}>
+                    {/* Hidden Type Input */}
                     <input
                         type="hidden"
                         name="transaction_type"
                         value={data.transaction_type}
                     />
+
                     <FieldSet>
                         <FieldGroup>
                             <div className="flex gap-4">
@@ -128,6 +161,7 @@ export function InputIncome() {
                                                     setOpen(true);
                                                 }
                                             }}
+                                            required
                                         />
 
                                         {/* Date Input Pop-up */}
@@ -163,6 +197,10 @@ export function InputIncome() {
                                                         setDate(date);
                                                         setValue(
                                                             formatDate(date),
+                                                        );
+                                                        setData(
+                                                            'transaction_date',
+                                                            toLocalDate(date),
                                                         );
                                                         setOpen(false);
                                                     }}
@@ -211,7 +249,7 @@ export function InputIncome() {
                                             <SelectValue placeholder="Choose category" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {all_categories
+                                            {categories
                                                 .filter(
                                                     (category) =>
                                                         category.category_type ===
@@ -255,12 +293,16 @@ export function InputIncome() {
                                             <SelectValue placeholder="Choose method" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="method_111">
-                                                Method 1
-                                            </SelectItem>
-                                            <SelectItem value="method_222">
-                                                Method 2
-                                            </SelectItem>
+                                            {transaction_methods.map(
+                                                (method) => (
+                                                    <SelectItem
+                                                        key={method}
+                                                        value={method}
+                                                    >
+                                                        {capitalize(method)}
+                                                    </SelectItem>
+                                                ),
+                                            )}
                                         </SelectContent>
                                     </Select>
                                     {/* <FieldDescription>Enter your 16-digit card number</FieldDescription> */}
