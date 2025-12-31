@@ -22,13 +22,13 @@ class Category extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
-    public function users(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo('users', 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 
     public function transactions(): HasMany
     {
-        return $this->hasMany('transactions', 'transaction_id');
+        return $this->hasMany(Transaction::class, 'transaction_id', 'transaction_id');
     }
 }

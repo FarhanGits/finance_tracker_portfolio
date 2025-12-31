@@ -23,13 +23,13 @@ class Transaction extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
-    public function users(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo('users', 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 
-    public function categories(): BelongsTo
+    public function category(): BelongsTo
     {
-        return $this->belongsTo('categories', 'category_id');
+        return $this->belongsTo(Category::class, 'category_id', 'category_id');
     }
 }
