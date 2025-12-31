@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Category extends Model
 {
@@ -19,4 +21,14 @@ class Category extends Model
     protected $primaryKey = "category_id";
     protected $keyType = 'string';
     public $incrementing = false;
+
+    public function users(): BelongsTo
+    {
+        return $this->belongsTo('users', 'user_id');
+    }
+
+    public function transactions(): HasMany
+    {
+        return $this->hasMany('transactions', 'transaction_id');
+    }
 }
