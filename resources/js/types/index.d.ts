@@ -52,9 +52,10 @@ export interface CategoryList {
 
 export interface TransactionList {
     transaction_id: string;
+    category?: CategoryList;
+    transaction_method: string;
     transaction_date: string;
     transaction_amount: number;
     transaction_type: string;
-    category_name: string;
     transaction_note: string;
 }
