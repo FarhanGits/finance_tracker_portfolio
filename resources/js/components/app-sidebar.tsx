@@ -10,10 +10,16 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard, trackCashflow } from '@/routes';
+import { cashflow, dashboard, trackCashflow } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { ArrowUpDown, FileUser, Folder, LayoutGrid } from 'lucide-react';
+import {
+    ArrowUpDown,
+    BookText,
+    FileUser,
+    Folder,
+    LayoutGrid,
+} from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -23,9 +29,14 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Track Cashflows',
+        title: 'Track Cashflow',
         href: trackCashflow().url,
         icon: ArrowUpDown,
+    },
+    {
+        title: 'Cashflow History',
+        href: cashflow().url,
+        icon: BookText,
     },
 ];
 

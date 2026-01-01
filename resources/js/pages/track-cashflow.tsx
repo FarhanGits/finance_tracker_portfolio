@@ -1,16 +1,23 @@
+import { DetailTransaction } from '@/components/detail-transaction';
 import { InputExpense } from '@/components/input-expense';
 import { InputIncome } from '@/components/input-income';
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard, trackCashflow } from '@/routes';
+import { capitalize, toIDR } from '@/lib/utils';
+import { cashflow, trackCashflow } from '@/routes';
 import { BreadcrumbItem, TransactionList } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard().url,
-    },
     {
         title: 'Track Cashflows',
         href: trackCashflow().url,
@@ -23,10 +30,29 @@ interface TransactionPageProps {
     [key: string]: unknown;
 }
 
+// // For Pagination Purpose
+// interface PaginationLink {
+//     url: string | null;
+//     label: string;
+//     active: boolean;
+// }
+// interface Paginated<T> {
+//     transactions: T[];
+//     links: PaginationLink[];
+
+//     [key: string]: unknown;
+// }
+
 export default function TrackCashflow() {
     const [activeTab, setActiveTab] = useState<'income' | 'expenses'>('income');
 
+    // Ambil data tanpa pagination
     const { transactions } = usePage<TransactionPageProps>().props;
+
+    // // Ambil data dengan pagination
+    // const { props } = usePage<{ data: Paginated<TransactionList> }>();
+    // const { transactions, links } = props.data;
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Track Your Cashflows | FinTrackr" />
@@ -62,19 +88,119 @@ export default function TrackCashflow() {
                 </div>
 
                 {/* Content */}
-                {/* <div className="grid auto-rows-min gap-4 md:grid-cols-3"></div> */}
                 {activeTab === 'income' && <InputIncome />}
                 {activeTab === 'expenses' && <InputExpense />}
 
                 <div className="relative h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
-                    {/* <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" /> */}
-                    <p>Your Last Transactions</p>
+                    <p className="m-5 text-center text-xl font-bold">
+                        Your Last Transactions
+                    </p>
+                    <div className="m-5 flex justify-end">
+                        <Link
+                            href={cashflow().url}
+                            className="rounded-sm border border-black p-1.5 text-sm hover:bg-black hover:text-white"
+                        >
+                            View All Transaction
+                        </Link>
+                    </div>
                     {transactions.length === 0 && 'No Transactions Yet'}
                     {transactions.length > 0 && (
                         <>
-                            {transactions.map((transaction) => (
-                                <p>{transaction.transaction_type}</p>
-                            ))}
+                            <Table className="border-t border-b">
+                                <TableCaption>
+                                    Your last transaction lists
+                                </TableCaption>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead className="text-center">
+                                            Date
+                                        </TableHead>
+                                        <TableHead className="text-center">
+                                            Type
+                                        </TableHead>
+                                        <TableHead className="text-center">
+                                            Category
+                                        </TableHead>
+                                        <TableHead className="text-center">
+                                            Amount
+                                        </TableHead>
+                                        <TableHead className="text-center">
+                                            Detail
+                                        </TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {transactions.map((transaction) => (
+                                        <>
+                                            <TableRow
+                                                className="text-center"
+                                                key={transaction.transaction_id}
+                                            >
+                                                <TableCell className="font-medium">
+                                                    {
+                                                        transaction.transaction_date
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {transaction.transaction_type ===
+                                                    'income' ? (
+                                                        <p className="h-fit w-fit rounded-sm bg-gradient-to-br from-green-500 to-green-600 p-1.5 text-center text-white">
+                                                            {capitalize(
+                                                                transaction.transaction_type,
+                                                            )}
+                                                        </p>
+                                                    ) : (
+                                                        <p className="h-fit w-fit rounded-sm bg-gradient-to-br from-blue-500 to-blue-600 p-1.5 text-center text-white">
+                                                            {capitalize(
+                                                                transaction.transaction_type,
+                                                            )}
+                                                        </p>
+                                                    )}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        transaction.category
+                                                            ?.category_name
+                                                    }
+                                                </TableCell>
+                                                <TableCell className="text-left">
+                                                    {toIDR(
+                                                        transaction.transaction_amount,
+                                                    )}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <DetailTransaction
+                                                        transaction={
+                                                            transaction
+                                                        }
+                                                    />
+                                                </TableCell>
+                                            </TableRow>
+                                        </>
+                                    ))}
+                                </TableBody>
+                            </Table>
+
+                            {/* Pagination, RUWET 🤦 */}
+                            {/* <div className="flex gap-2">
+                                {links.map((link, i) => (
+                                    <button
+                                        key={i}
+                                        disabled={!link.url}
+                                        onClick={() =>
+                                            link.url && router.visit(link.url)
+                                        }
+                                        className={`border px-3 py-1 ${
+                                            link.active
+                                                ? 'bg-black text-white'
+                                                : ''
+                                        }`}
+                                        dangerouslySetInnerHTML={{
+                                            __html: link.label,
+                                        }}
+                                    />
+                                ))}
+                            </div> */}
                         </>
                     )}
                 </div>

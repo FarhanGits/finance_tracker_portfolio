@@ -16,7 +16,7 @@ class TransactionController extends Controller
     public function ViewTransactionPage(Request $request): Response {
         $user_id = Auth::user()->user_id;
         $categories = Category::all();
-        $transactions = Transaction::orderBy('transaction_date', 'desc')->paginate(5)->where('user_id', $user_id);
+        $transactions = Transaction::with('category')->orderBy('transaction_date', 'desc')->paginate(5)->where('user_id', $user_id);
         $transaction_methods = TransactionMethod::values();
         return Inertia::render('track-cashflow', compact('user_id', 'categories', 'transactions', 'transaction_methods'));
     }
@@ -37,5 +37,9 @@ class TransactionController extends Controller
         return redirect()->route('track-cashflow');
     }
 
-    public function ViewTransactionList () {}
+    public function ViewTransactionList () {
+        $user_id = Auth::user()->user_id;
+        $transactions = Transaction::with('category')->orderBy('transaction_date', 'desc')->paginate(5)->where('user_id', $user_id);
+        return Inertia::render('cashflow', compact('transactions'));
+    }
 }

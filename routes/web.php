@@ -18,6 +18,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::get('/track-cashflow', [TransactionController::class, 'ViewTransactionPage'])->name('track-cashflow');
+    Route::get('/cashflow', [TransactionController::class, 'ViewTransactionList'])->name('cashflow');
 
     Route::post('/create-transaction', [TransactionController::class, 'CreateTransaction'])->name('transaction.create');
 
