@@ -95,23 +95,27 @@ export default function TrackCashflow() {
                     <p className="m-5 text-center text-xl font-bold">
                         Your Last Transactions
                     </p>
-                    <div className="m-5 flex justify-end">
-                        <Link
-                            href={cashflow().url}
-                            className="rounded-sm border border-black p-1.5 text-sm hover:bg-black hover:text-white"
-                        >
-                            View All Transaction
-                        </Link>
-                    </div>
-                    {transactions.length === 0 && 'No Transactions Yet'}
+                    {transactions.length === 0 && (
+                        <p className="text-center text-sm italic">
+                            No transactions yet
+                        </p>
+                    )}
                     {transactions.length > 0 && (
                         <>
+                            <div className="m-5 flex justify-end">
+                                <Link
+                                    href={cashflow().url}
+                                    className="rounded-sm border border-black p-1.5 text-sm hover:bg-black hover:text-white"
+                                >
+                                    View All Transaction
+                                </Link>
+                            </div>
                             <Table className="border-t border-b">
                                 <TableCaption>
                                     Your last transaction lists
                                 </TableCaption>
                                 <TableHeader>
-                                    <TableRow>
+                                    <TableRow className="bg-gray-50">
                                         <TableHead className="text-center">
                                             Date
                                         </TableHead>
@@ -141,7 +145,7 @@ export default function TrackCashflow() {
                                                         transaction.transaction_date
                                                     }
                                                 </TableCell>
-                                                <TableCell>
+                                                <TableCell className="flex justify-center">
                                                     {transaction.transaction_type ===
                                                     'income' ? (
                                                         <p className="h-fit w-fit rounded-sm bg-gradient-to-br from-green-500 to-green-600 p-1.5 text-center text-white">
@@ -163,7 +167,7 @@ export default function TrackCashflow() {
                                                             ?.category_name
                                                     }
                                                 </TableCell>
-                                                <TableCell className="text-left">
+                                                <TableCell>
                                                     {toIDR(
                                                         transaction.transaction_amount,
                                                     )}

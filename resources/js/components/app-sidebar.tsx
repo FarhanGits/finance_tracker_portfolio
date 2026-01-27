@@ -10,12 +10,13 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { cashflow, dashboard, trackCashflow } from '@/routes';
+import { budgeting, cashflow, dashboard, trackCashflow } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import {
     ArrowUpDown,
     BookText,
+    ChartPie,
     FileUser,
     Folder,
     LayoutGrid,
@@ -37,6 +38,11 @@ const mainNavItems: NavItem[] = [
         title: 'Cashflow History',
         href: cashflow().url,
         icon: BookText,
+    },
+    {
+        title: 'Budgeting',
+        href: budgeting().url,
+        icon: ChartPie,
     },
 ];
 

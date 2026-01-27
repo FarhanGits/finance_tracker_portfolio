@@ -23,6 +23,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { capitalize } from '@/lib/utils';
 import { CategoryList } from '@/types';
 import { useForm, usePage } from '@inertiajs/react';
 import { BanknoteArrowUp, CalendarIcon } from 'lucide-react';
@@ -65,10 +66,6 @@ interface TransactionPageProps {
     transaction_methods: string[];
 
     [key: string]: unknown;
-}
-
-function capitalize(str: string) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 export function InputIncome() {

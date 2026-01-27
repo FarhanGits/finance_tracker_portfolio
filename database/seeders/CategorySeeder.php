@@ -39,7 +39,5 @@ class CategorySeeder extends Seeder
                 "updated_at" => Carbon::now()
             ]);
         }
-
-        DB::table("categories")->insert([]);
     }
 }

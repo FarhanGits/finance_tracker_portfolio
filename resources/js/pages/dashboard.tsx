@@ -44,8 +44,8 @@ export default function Dashboard() {
                         {/* <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" /> */}
                         <div className="flex w-full items-center justify-between">
                             <DollarSign size={60} />
-                            <p className="h-fit rounded-xl bg-green-700 px-2 text-base text-white">
-                                Income
+                            <p className="h-fit rounded-xl bg-blue-700 px-2 text-base text-white">
+                                Defisit
                             </p>
                         </div>
                         <p className="text-lg">IDR 100.000</p>
