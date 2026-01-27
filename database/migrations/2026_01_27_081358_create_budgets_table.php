@@ -12,8 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('budgets', function (Blueprint $table) {
-            $table->id();
+            $table->string('budget_id')->primary();
+            $table->string('user_id');
+            $table->string('category_id');
+            $table->integer('budget_amount');
+            $table->unsignedTinyInteger('month');
+            $table->unsignedSmallInteger('year');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('user_id')->on('users');
+            $table->foreign('category_id')->references('category_id')->on('categories');
         });
     }
 
