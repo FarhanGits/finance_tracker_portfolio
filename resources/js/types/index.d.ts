@@ -49,7 +49,6 @@ export interface CategoryList {
     category_name: string;
     category_type: 'income' | 'expense';
 }
-
 export interface TransactionList {
     transaction_id: string;
     category?: CategoryList;
@@ -58,4 +57,14 @@ export interface TransactionList {
     transaction_amount: number;
     transaction_type: string;
     transaction_note: string;
+}
+
+// For Budgeting Purpose
+export interface Budget {
+    budget_id: string;
+    user?: User;
+    category?: CategoryList;
+    month: number,
+    year: number,
+    budget_amount: number,
 }
