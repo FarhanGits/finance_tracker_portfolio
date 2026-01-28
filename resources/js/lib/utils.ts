@@ -28,3 +28,13 @@ export function toIDR(amount: number){
         minimumFractionDigits: 0,
     });
 }
+
+export function formatPeriod(period: string) {
+    const date = period.split('-');
+    const month = new Date(parseInt(date[0]) - 1).toLocaleDateString('en-US', {
+        month: 'long',
+    });
+    const year = date[1];
+    const final_period = month + ' ' + year;
+    return final_period;
+}
