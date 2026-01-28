@@ -15,10 +15,11 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
+import { formatPeriod, toIDR } from '@/lib/utils';
 import { budgeting } from '@/routes';
 import { BreadcrumbItem, Budget, CategoryList } from '@/types';
-import { Head, useForm, usePage } from '@inertiajs/react';
-import { CalendarFold } from 'lucide-react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { ArrowUpRight, CalendarFold } from 'lucide-react';
 import React from 'react';
 import { route } from 'ziggy-js';
 
@@ -37,16 +38,6 @@ interface BudgetProps {
     [key: string]: unknown;
 }
 
-function formatPeriod(period: string) {
-    const date = period.split('-');
-    const month = new Date(parseInt(date[0]) - 1).toLocaleDateString('en-US', {
-        month: 'long',
-    });
-    const year = date[1];
-    const final_period = month + ' ' + year;
-    return final_period;
-}
-
 export default function Budgeting() {
     const { budgets, categories, user_id, budget_period } =
         usePage<BudgetProps>().props;
@@ -54,6 +45,8 @@ export default function Budgeting() {
         budget_amount: '',
         category_id: '',
     });
+
+    console.log(budgets);
 
     function setBudget(e: React.FormEvent) {
         e.preventDefault();
@@ -76,6 +69,7 @@ export default function Budgeting() {
                     <form onSubmit={setBudget}>
                         <FieldSet>
                             <FieldGroup className="flex flex-row">
+                                {/* Amount */}
                                 <Field>
                                     <FieldLabel htmlFor="budget_amount">
                                         Budget Amount
@@ -94,6 +88,8 @@ export default function Budgeting() {
                                         }
                                     ></Input>
                                 </Field>
+
+                                {/* Category */}
                                 <Field>
                                     <FieldLabel htmlFor="budget_category">
                                         Category
@@ -137,18 +133,44 @@ export default function Budgeting() {
                                 </Field>
                             </FieldGroup>
                             <FieldSeparator />
-                            <Button type="submit" className="w-fit self-end">
+                            <Button
+                                type="submit"
+                                className="w-fit cursor-pointer self-end"
+                            >
                                 Set Budget
                             </Button>
                         </FieldSet>
                     </form>
                 </div>
+
                 <div className="w-full rounded-xl border p-5">
-                    <p className="text-center text-sm italic">
-                        {budgets.length === 0 &&
-                            'ⓘ No budgets setting this month yet'}
-                        {budgets.length > 0 && 'Here yeah'}
-                    </p>
+                    <h1 className="mb-4 text-center text-xl font-semibold">
+                        Budgeting for {formatPeriod(budget_period)} Period
+                    </h1>
+                    {budgets.length === 0 && (
+                        <p className="text-center text-sm italic">
+                            ⓘ No budgets setting this month yet
+                        </p>
+                    )}
+                    {budgets.length > 0 && (
+                        <div className="flex flex-col justify-center gap-3">
+                            {budgets.map((budget) => (
+                                <Link
+                                    key={budget.budget_id}
+                                    href={'#'}
+                                    className="flex w-3/4 justify-between self-center rounded-xl border p-3"
+                                >
+                                    <p className="text-black">
+                                        {budget.category?.category_name}
+                                    </p>
+                                    <div className="flex items-center gap-1.5">
+                                        <p>{toIDR(budget.budget_amount)}</p>
+                                        <ArrowUpRight />
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </AppLayout>
