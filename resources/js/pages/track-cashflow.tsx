@@ -13,7 +13,7 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import { formatDate, toIDR } from '@/lib/utils';
 import { cashflow, trackCashflow } from '@/routes';
-import { BreadcrumbItem, TransactionList } from '@/types';
+import { BreadcrumbItem, Transaction } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
@@ -25,7 +25,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 interface TransactionPageProps {
-    transactions: TransactionList[];
+    transactions: Transaction[];
 
     [key: string]: unknown;
 }
@@ -50,7 +50,7 @@ export default function TrackCashflow() {
     const { transactions } = usePage<TransactionPageProps>().props;
 
     // // Ambil data dengan pagination
-    // const { props } = usePage<{ data: Paginated<TransactionList> }>();
+    // const { props } = usePage<{ data: Paginated<Transaction> }>();
     // const { transactions, links } = props.data;
 
     return (
@@ -132,58 +132,54 @@ export default function TrackCashflow() {
                                 </TableHeader>
                                 <TableBody>
                                     {transactions.map((transaction) => (
-                                        <>
-                                            <TableRow
-                                                className="text-center"
-                                                key={transaction.transaction_id}
-                                            >
-                                                <TableCell className="font-medium">
-                                                    <p>
-                                                        {formatDate(
-                                                            new Date(
-                                                                transaction.transaction_date,
-                                                            ),
+                                        <TableRow
+                                            className="text-center"
+                                            key={transaction.transaction_id}
+                                        >
+                                            <TableCell className="font-medium">
+                                                <p>
+                                                    {formatDate(
+                                                        new Date(
+                                                            transaction.transaction_date,
+                                                        ),
+                                                    )}
+                                                </p>
+                                                <p className="text-sm italic">
+                                                    {transaction.created_at
+                                                        .split('T')[1]
+                                                        .slice(0, -8)}
+                                                </p>
+                                            </TableCell>
+                                            <TableCell>
+                                                {
+                                                    transaction.category
+                                                        ?.category_name
+                                                }
+                                            </TableCell>
+                                            <TableCell className="flex justify-center">
+                                                {transaction.transaction_type ===
+                                                'income' ? (
+                                                    <p className="h-fit w-fit rounded-sm bg-gradient-to-br from-green-500 to-green-600 p-1.5 text-center text-white">
+                                                        +{' '}
+                                                        {toIDR(
+                                                            transaction.transaction_amount,
                                                         )}
                                                     </p>
-                                                    <p className="text-sm italic">
-                                                        {transaction.created_at
-                                                            .split('T')[1]
-                                                            .slice(0, -8)}
+                                                ) : (
+                                                    <p className="h-fit w-fit rounded-sm bg-gradient-to-br from-red-500 to-red-600 p-1.5 text-center text-white">
+                                                        -{' '}
+                                                        {toIDR(
+                                                            transaction.transaction_amount,
+                                                        )}
                                                     </p>
-                                                </TableCell>
-                                                <TableCell>
-                                                    {
-                                                        transaction.category
-                                                            ?.category_name
-                                                    }
-                                                </TableCell>
-                                                <TableCell className="flex justify-center">
-                                                    {transaction.transaction_type ===
-                                                    'income' ? (
-                                                        <p className="h-fit w-fit rounded-sm bg-gradient-to-br from-green-500 to-green-600 p-1.5 text-center text-white">
-                                                            +{' '}
-                                                            {toIDR(
-                                                                transaction.transaction_amount,
-                                                            )}
-                                                        </p>
-                                                    ) : (
-                                                        <p className="h-fit w-fit rounded-sm bg-gradient-to-br from-red-500 to-red-600 p-1.5 text-center text-white">
-                                                            -{' '}
-                                                            {toIDR(
-                                                                transaction.transaction_amount,
-                                                            )}
-                                                        </p>
-                                                    )}
-                                                </TableCell>
-                                                <TableCell>
-                                                    <DetailTransaction
-                                                        transaction={
-                                                            transaction
-                                                        }
-                                                    />
-                                                </TableCell>
-                                            </TableRow>
-                                        </>
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                <DetailTransaction
+                                                    transaction={transaction}
+                                                />
+                                            </TableCell>
+                                        </TableRow>
                                     ))}
                                 </TableBody>
                             </Table>

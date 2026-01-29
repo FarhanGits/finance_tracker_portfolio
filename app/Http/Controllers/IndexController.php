@@ -22,24 +22,45 @@ class IndexController extends Controller
 
     public function dashboard() {
         $transaction_period = now()->month . '-' . now()->year;
+        
         $user_id = Auth::user()->user_id;
-        $budgets = Budget::with(['user', 'category'])
-            ->where('user_id', $user_id)
-            ->where('month', now()->month)
-            ->where('year', now()->year)
-            ->get();
+        
         $transactions = Transaction::with(['user', 'category'])
             ->where('user_id', $user_id)
             ->whereMonth('transaction_date', now()->month)
             ->whereYear('transaction_date', now()->year)
             ->get();
-        $categories = Category::with(['transactions', 'budgets'])
-            ->get();
+        
+        $budget_report = Category::with([
+                'budgets' => function($budget) {
+                    $budget->where('month', now()->month)->where('year', now()->year);
+                },
+                'transactions' => function($transaction) {
+                    $transaction->whereMonth('transaction_date', now()->month)->whereYear('transaction_date', now()->year);
+                }
+            ])
+            ->where('category_type', 'expense')
+            ->get()
+            ->map(function($category) {
+                $expense_category = $category->category_name;
+                $limit = $category->budgets()->sum('budget_amount');
+                $spent = $category->transactions()->sum('transaction_amount');
+                $percentage = $limit > 0 ? ($spent / $limit) * 100 : 0;
+
+                // Null return to category with no budgeting based on budget amount and total expenses
+                if ($limit === 0 && $spent === 0) return null;
+
+                return [
+                    'expense_category' => $expense_category,
+                    'limit' => $limit,
+                    'spent' => $spent,
+                    'percentage' => $percentage
+                ];
+            });
         return Inertia::render('dashboard', [
             'transaction_period' => $transaction_period,
-            'budgets' => $budgets,
             'transactions' => $transactions,
-            'categories' => $categories
+            'budget_report' => $budget_report
         ]);
     }
 }

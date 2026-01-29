@@ -49,3 +49,59 @@ export function formatDate(date: Date | undefined) {
         year: 'numeric',
     });
 }
+
+export function budgetWarning(percentage: number) {
+    let message,
+        color = '';
+    if (percentage > 100) {
+        message = "Stop, you're overspent!!";
+        color = 'text-red-700';
+    } else if (percentage == 100) {
+        message = 'Stop, you have meet your limit!!';
+        color = 'text-red-700';
+    } else if (percentage >= 90) {
+        message = "Caution, you're almost meet your limit!!";
+        color = 'text-red-500';
+    } else if (percentage >= 70) {
+        message = "Warning, you're spending is going too high!";
+        color = 'text-yellow-700';
+    } else if (percentage >= 50) {
+        message = "Warning, you're half way to go!";
+        color = 'text-yellow-700';
+    } else if (percentage < 50) {
+        message = 'Good, always check your spending 😊';
+        color = 'text-green-700';
+    }
+    const response = { message, color };
+    return response;
+}
+
+// // old budget report looping
+// for (let i = 0; i < categories.length; i++) {
+//     const category = categories[i];
+//     if (category.category_type === 'expense') {
+//         const category_name = category.category_name;
+
+//         const budgets = category.budgets ?? [];
+//         let limit = 0;
+//         for (let j = 0; j < budgets.length; j++) {
+//             limit = budgets[j].budget_amount;
+
+//             const transactions = category.transactions ?? [];
+//             let spent = 0;
+//             for (let k = 0; k < transactions.length; k++) {
+//                 spent += transactions[k].transaction_amount;
+//             }
+
+//             const precentage = (spent / limit) * 100;
+
+//             budgeting.push({
+//                 category: category_name,
+//                 limit: limit,
+//                 spent: spent,
+//                 precentage: precentage,
+//                 message: budgetWarning(precentage),
+//             });
+//         }
+//     }
+// }

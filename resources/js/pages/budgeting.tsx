@@ -17,7 +17,7 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import { formatPeriod, toIDR } from '@/lib/utils';
 import { budgeting } from '@/routes';
-import { BreadcrumbItem, Budget, CategoryList } from '@/types';
+import { BreadcrumbItem, Budget, Category } from '@/types';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { ArrowUpRight, CalendarFold } from 'lucide-react';
 import React from 'react';
@@ -32,7 +32,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 interface BudgetProps {
     budgets: Budget[];
-    categories: CategoryList[];
+    categories: Category[];
     user_id: string;
     budget_period: string;
     errors: string;
