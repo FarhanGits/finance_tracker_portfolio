@@ -333,7 +333,7 @@ export function InputExpense() {
 
                         <Button
                             type="submit"
-                            className="w-fit cursor-pointer bg-gradient-to-br from-blue-500 to-blue-600 text-base"
+                            className="w-fit cursor-pointer bg-gradient-to-br from-red-500 to-red-600 text-base"
                         >
                             Add Expense
                         </Button>

@@ -38,3 +38,14 @@ export function formatPeriod(period: string) {
     const final_period = month + ' ' + year;
     return final_period;
 }
+
+export function formatDate(date: Date | undefined) {
+    if (!date) {
+        return '';
+    }
+    return date.toLocaleDateString('en-US', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+    });
+}

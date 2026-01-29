@@ -42,27 +42,34 @@ export interface User {
     [key: string]: unknown; // This allows for additional properties...
 }
 
-// For Transaction Purpose
 export interface CategoryList {
     category_id: string;
     user_id: string;
+    user?: User;
+    transactions?: TransactionList[];
+    budgets?: Budget[];
     category_name: string;
     category_type: 'income' | 'expense';
 }
+
 export interface TransactionList {
     transaction_id: string;
-    category?: CategoryList;
+    user_id: string;
+    category_id: string;
     user?: User;
+    category?: CategoryList;
     transaction_method: string;
     transaction_date: string;
     transaction_amount: number;
     transaction_type: string;
     transaction_note: string;
+    created_at: string;
 }
 
-// For Budgeting Purpose
 export interface Budget {
     budget_id: string;
+    user_id: string;
+    category_id: string;
     user?: User;
     category?: CategoryList;
     month: number,

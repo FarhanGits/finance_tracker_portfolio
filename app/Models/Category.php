@@ -29,11 +29,11 @@ class Category extends Model
 
     public function transactions(): HasMany
     {
-        return $this->hasMany(Transaction::class, 'transaction_id', 'transaction_id');
+        return $this->hasMany(Transaction::class, 'category_id', 'category_id');
     }
     
     public function budgets(): HasMany
     {
-        return $this->hasMany(Budget::class, 'budget_id', 'budget_id');
+        return $this->hasMany(Budget::class, 'category_id', 'category_id');
     }
 }

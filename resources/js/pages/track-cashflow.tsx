@@ -11,7 +11,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { capitalize, toIDR } from '@/lib/utils';
+import { formatDate, toIDR } from '@/lib/utils';
 import { cashflow, trackCashflow } from '@/routes';
 import { BreadcrumbItem, TransactionList } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
@@ -77,7 +77,7 @@ export default function TrackCashflow() {
                                 onClick={() => setActiveTab('expenses')}
                                 className={`border-b-2 px-1 pb-4 transition-colors ${
                                     activeTab === 'expenses'
-                                        ? 'border-blue-600 font-bold text-blue-600'
+                                        ? 'border-red-600 font-bold text-red-600'
                                         : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                                 }`}
                             >
@@ -120,9 +120,6 @@ export default function TrackCashflow() {
                                             Date
                                         </TableHead>
                                         <TableHead className="text-center">
-                                            Type
-                                        </TableHead>
-                                        <TableHead className="text-center">
                                             Category
                                         </TableHead>
                                         <TableHead className="text-center">
@@ -141,25 +138,18 @@ export default function TrackCashflow() {
                                                 key={transaction.transaction_id}
                                             >
                                                 <TableCell className="font-medium">
-                                                    {
-                                                        transaction.transaction_date
-                                                    }
-                                                </TableCell>
-                                                <TableCell className="flex justify-center">
-                                                    {transaction.transaction_type ===
-                                                    'income' ? (
-                                                        <p className="h-fit w-fit rounded-sm bg-gradient-to-br from-green-500 to-green-600 p-1.5 text-center text-white">
-                                                            {capitalize(
-                                                                transaction.transaction_type,
-                                                            )}
-                                                        </p>
-                                                    ) : (
-                                                        <p className="h-fit w-fit rounded-sm bg-gradient-to-br from-blue-500 to-blue-600 p-1.5 text-center text-white">
-                                                            {capitalize(
-                                                                transaction.transaction_type,
-                                                            )}
-                                                        </p>
-                                                    )}
+                                                    <p>
+                                                        {formatDate(
+                                                            new Date(
+                                                                transaction.transaction_date,
+                                                            ),
+                                                        )}
+                                                    </p>
+                                                    <p className="text-sm italic">
+                                                        {transaction.created_at
+                                                            .split('T')[1]
+                                                            .slice(0, -8)}
+                                                    </p>
                                                 </TableCell>
                                                 <TableCell>
                                                     {
@@ -167,9 +157,22 @@ export default function TrackCashflow() {
                                                             ?.category_name
                                                     }
                                                 </TableCell>
-                                                <TableCell>
-                                                    {toIDR(
-                                                        transaction.transaction_amount,
+                                                <TableCell className="flex justify-center">
+                                                    {transaction.transaction_type ===
+                                                    'income' ? (
+                                                        <p className="h-fit w-fit rounded-sm bg-gradient-to-br from-green-500 to-green-600 p-1.5 text-center text-white">
+                                                            +{' '}
+                                                            {toIDR(
+                                                                transaction.transaction_amount,
+                                                            )}
+                                                        </p>
+                                                    ) : (
+                                                        <p className="h-fit w-fit rounded-sm bg-gradient-to-br from-red-500 to-red-600 p-1.5 text-center text-white">
+                                                            -{' '}
+                                                            {toIDR(
+                                                                transaction.transaction_amount,
+                                                            )}
+                                                        </p>
                                                     )}
                                                 </TableCell>
                                                 <TableCell>

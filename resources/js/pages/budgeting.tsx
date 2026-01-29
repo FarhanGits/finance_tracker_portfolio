@@ -35,18 +35,19 @@ interface BudgetProps {
     categories: CategoryList[];
     user_id: string;
     budget_period: string;
+    errors: string;
     [key: string]: unknown;
 }
 
 export default function Budgeting() {
-    const { budgets, categories, user_id, budget_period } =
+    const { budgets, categories, user_id, budget_period, errors } =
         usePage<BudgetProps>().props;
     const { data, setData, post } = useForm({
         budget_amount: '',
         category_id: '',
     });
 
-    console.log(budgets);
+    console.log(errors);
 
     function setBudget(e: React.FormEvent) {
         e.preventDefault();
@@ -59,6 +60,7 @@ export default function Budgeting() {
                 <h1 className="mb-4 text-center text-2xl font-bold">
                     Set your budgeting plan this month
                 </h1>
+                {/* {errors && <p>{errors}</p>} */}
                 <div className="flex w-full flex-col gap-5 rounded-xl border p-5">
                     <div className="flex items-center gap-1">
                         <CalendarFold />

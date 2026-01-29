@@ -15,7 +15,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { capitalize, toIDR } from '@/lib/utils';
+import { capitalize, formatDate, toIDR } from '@/lib/utils';
 import { cashflow } from '@/routes';
 import { BreadcrumbItem, TransactionList } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
@@ -132,7 +132,9 @@ export default function CashFlow() {
                             key={transaction.transaction_id}
                         >
                             <TableCell className="border-r font-medium">
-                                {transaction.transaction_date}
+                                {formatDate(
+                                    new Date(transaction.transaction_date),
+                                )}
                             </TableCell>
                             <TableCell className="flex justify-center border-r">
                                 {transaction.transaction_type === 'income' ? (
@@ -142,7 +144,7 @@ export default function CashFlow() {
                                         )}
                                     </p>
                                 ) : (
-                                    <p className="h-fit w-fit rounded-sm bg-gradient-to-br from-blue-500 to-blue-600 p-1.5 text-center text-white">
+                                    <p className="h-fit w-fit rounded-sm bg-gradient-to-br from-red-500 to-red-600 p-1.5 text-center text-white">
                                         {capitalize(
                                             transaction.transaction_type,
                                         )}
