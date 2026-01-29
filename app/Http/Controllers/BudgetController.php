@@ -34,6 +34,16 @@ class BudgetController extends Controller
 
     public function CreateBudgeting(Request $request) {
         $input = $request->all();
+
+        $isBudgetExist = Budget::where('category_id', $input['category_id'])
+            ->where('month', now()->month)
+            ->where('year', now()->year)
+            ->first();
+        
+        if($isBudgetExist) {
+            return redirect()->route('budgeting')
+                ->withErrors(['error' => 'Budget for this category already exists for this month.']);
+        }
         $input['month'] = now()->month;
         $input['year'] = now()->year;
         $input['budget_id'] = 'BUDG-' . Str::ulid();

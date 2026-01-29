@@ -33,7 +33,8 @@ class IndexController extends Controller
             ->whereMonth('transaction_date', now()->month)
             ->whereYear('transaction_date', now()->year)
             ->get();
-        $categories = Category::all();
+        $categories = Category::with(['transactions', 'budgets'])
+            ->get();
         return Inertia::render('dashboard', [
             'transaction_period' => $transaction_period,
             'budgets' => $budgets,
