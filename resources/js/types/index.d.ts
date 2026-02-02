@@ -83,3 +83,13 @@ export interface BudgetReport {
     spent: number;
     percentage: number;
 }
+
+export interface TopExpense {
+    category: string;
+    total_amount: number;
+}
+
+export interface TopIncome {
+    category: string;
+    total_amount: number;
+}

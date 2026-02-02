@@ -23,7 +23,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { CategoryList } from '@/types';
+import { Category } from '@/types';
 import { useForm, usePage } from '@inertiajs/react';
 import { BanknoteArrowDown, CalendarIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -59,7 +59,7 @@ function toLocalDate(date: Date | undefined) {
 }
 
 interface TransactionPageProps {
-    categories: CategoryList[];
+    categories: Category[];
     user_id: string;
     transaction_methods: string[];
 

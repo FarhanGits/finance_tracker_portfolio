@@ -115,17 +115,17 @@ export default function TrackCashflow() {
                                     Your last transaction lists
                                 </TableCaption>
                                 <TableHeader>
-                                    <TableRow className="bg-gray-50">
-                                        <TableHead className="text-center">
+                                    <TableRow className="">
+                                        <TableHead className="text-center font-black">
                                             Date
                                         </TableHead>
-                                        <TableHead className="text-center">
+                                        <TableHead className="text-center font-black">
                                             Category
                                         </TableHead>
-                                        <TableHead className="text-center">
+                                        <TableHead className="text-center font-black">
                                             Amount
                                         </TableHead>
-                                        <TableHead className="text-center">
+                                        <TableHead className="text-center font-black">
                                             Detail
                                         </TableHead>
                                     </TableRow>

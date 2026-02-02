@@ -20,8 +20,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/cashflow', [TransactionController::class, 'ViewTransactionList'])->name('cashflow');
     Route::get('/cashflow/export', [TransactionController::class, 'showPDF'])->name('export-cashflow');
 
-    Route::get('/budgeting', [BudgetController::class, 'ViewBudgetingPage'])->name('budgeting');
-    Route::post('/create-budgeting', [BudgetController::class, 'CreateBudgeting'])->name('budgeting.create');
+    Route::get('/budgeting', [BudgetController::class, 'viewBudgetingPage'])->name('budgeting');
+    Route::post('/create-budgeting', [BudgetController::class, 'createBudgeting'])->name('budgeting.create');
+    Route::patch('/edit-budgeting/{id}', [BudgetController::class, 'editBudgeting'])->name('budgeting.edit');
+    Route::delete('/delete-budgeting/{id}', [BudgetController::class, 'deleteBudgeting'])->name('budgeting.delete');
 });
 
 require __DIR__.'/settings.php';

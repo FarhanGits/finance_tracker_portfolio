@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { capitalize } from '@/lib/utils';
-import { CategoryList } from '@/types';
+import { Category } from '@/types';
 import { useForm, usePage } from '@inertiajs/react';
 import { BanknoteArrowUp, CalendarIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -61,7 +61,7 @@ function isValidDate(date: Date | undefined) {
 }
 
 interface TransactionPageProps {
-    categories: CategoryList[];
+    categories: Category[];
     user_id: string;
     transaction_methods: string[];
 
@@ -270,7 +270,6 @@ export function InputIncome() {
                                                 ))}
                                         </SelectContent>
                                     </Select>
-                                    {/* <FieldDescription>Enter your 16-digit card number</FieldDescription> */}
                                 </Field>
 
                                 {/* Method Input */}
