@@ -1,3 +1,4 @@
+import EditBudgeting from '@/components/edit-budgeting';
 import { Button } from '@/components/ui/button';
 import {
     Field,
@@ -18,8 +19,8 @@ import AppLayout from '@/layouts/app-layout';
 import { formatPeriod, toIDR } from '@/lib/utils';
 import { budgeting } from '@/routes';
 import { BreadcrumbItem, Budget, Category } from '@/types';
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { ArrowUpRight, CalendarFold } from 'lucide-react';
+import { Head, useForm, usePage } from '@inertiajs/react';
+import { CalendarFold, Trash } from 'lucide-react';
 import React from 'react';
 import { route } from 'ziggy-js';
 
@@ -40,19 +41,24 @@ interface BudgetProps {
 }
 
 export default function Budgeting() {
-    const { budgets, categories, user_id, budget_period, errors } =
+    const { budgets, categories, user_id, budget_period } =
         usePage<BudgetProps>().props;
-    const { data, setData, post } = useForm({
+
+    const {
+        data,
+        setData,
+        post,
+        delete: destroy,
+    } = useForm({
         budget_amount: '',
         category_id: '',
     });
 
-    console.log(errors);
-
-    function setBudget(e: React.FormEvent) {
+    function createBudget(e: React.FormEvent) {
         e.preventDefault();
         post(route('budgeting.create'));
     }
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Budgeting" />
@@ -60,7 +66,7 @@ export default function Budgeting() {
                 <h1 className="mb-4 text-center text-2xl font-bold">
                     Set your budgeting plan this month
                 </h1>
-                {/* {errors && <p>{errors}</p>} */}
+                {/* {errors != null && <p>{errors}</p>} */}
                 <div className="flex w-full flex-col gap-5 rounded-xl border p-5">
                     <div className="flex items-center gap-1">
                         <CalendarFold />
@@ -68,7 +74,7 @@ export default function Budgeting() {
                             {formatPeriod(budget_period)}
                         </h1>
                     </div>
-                    <form onSubmit={setBudget}>
+                    <form onSubmit={createBudget}>
                         <FieldSet>
                             <FieldGroup className="flex flex-row">
                                 {/* Amount */}
@@ -157,19 +163,49 @@ export default function Budgeting() {
                     {budgets.length > 0 && (
                         <div className="flex flex-col justify-center gap-3">
                             {budgets.map((budget) => (
-                                <Link
+                                <div
                                     key={budget.budget_id}
-                                    href={'#'}
-                                    className="flex w-3/4 justify-between self-center rounded-xl border p-3"
+                                    className="flex w-3/4 items-center justify-between self-center rounded-xl border p-3"
                                 >
                                     <p className="text-black">
                                         {budget.category?.category_name}
                                     </p>
-                                    <div className="flex items-center gap-1.5">
+                                    <div className="flex items-center gap-3">
                                         <p>{toIDR(budget.budget_amount)}</p>
-                                        <ArrowUpRight />
+
+                                        {/* Edit */}
+                                        <EditBudgeting
+                                            budget={budget}
+                                            budget_period={budget_period}
+                                            categories={categories}
+                                            user_id={user_id}
+                                        />
+
+                                        {/* Delete */}
+                                        <Button
+                                            onClick={() => {
+                                                if (
+                                                    confirm(
+                                                        'You sure wanna delete this ' +
+                                                            budget.category
+                                                                ?.category_name +
+                                                            ' category?',
+                                                    )
+                                                ) {
+                                                    destroy(
+                                                        route(
+                                                            'budgeting.delete',
+                                                            budget.budget_id,
+                                                        ),
+                                                    );
+                                                }
+                                            }}
+                                            className="cursor-pointer rounded-md border bg-red-700 p-1.5 text-white"
+                                        >
+                                            <Trash />
+                                        </Button>
                                     </div>
-                                </Link>
+                                </div>
                             ))}
                         </div>
                     )}

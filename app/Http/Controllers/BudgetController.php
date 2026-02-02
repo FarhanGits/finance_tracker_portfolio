@@ -6,6 +6,7 @@ use App\Http\Resources\TransactionResource;
 use App\Models\Budget;
 use App\Models\Category;
 use App\Models\Transaction;
+use App\Services\BudgetService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -15,7 +16,7 @@ use function Termwind\render;
 
 class BudgetController extends Controller
 {
-    public function ViewBudgetingPage() {
+    public function viewBudgetingPage() {
         $user_id = Auth::user()->user_id;
         $budgets = Budget::with('category')
             ->where('user_id', $user_id)
@@ -32,32 +33,25 @@ class BudgetController extends Controller
         ]);
     }
 
-    public function CreateBudgeting(Request $request) {
+    public function createBudgeting(Request $request, BudgetService $service) {
         $input = $request->all();
 
-        $isBudgetExist = Budget::where('category_id', $input['category_id'])
-            ->where('month', now()->month)
-            ->where('year', now()->year)
-            ->first();
-        
-        if($isBudgetExist) {
-            return redirect()->route('budgeting')
-                ->withErrors(['error' => 'Budget for this category already exists for this month.']);
-        }
-        $input['month'] = now()->month;
-        $input['year'] = now()->year;
-        $input['budget_id'] = 'BUDG-' . Str::ulid();
-        $input['user_id'] = Auth::user()->user_id;
+        $service->create($input);
 
-        // // Contoh mencari transaksi dengan month & year sesuai variable yg dideclare
-        // $transactions = Transaction::with(['users', 'categories'])
-        //     ->where('user_id', $input['user_id'])
-        //     ->where('category_id', $input['category_id'])
-        //     ->whereMonth('transaction_date', $input['month'])
-        //     ->whereYear('transaction_date', $input['year'])
-        //     ->get();
+        return redirect()->route('budgeting');
+    }
 
-        Budget::create($input);
+    public function editBudgeting(Request $request, string $id, BudgetService $service) {
+        $input = $request->all();
+
+        $service->update($input, $id);
+
+        return redirect()->route('budgeting');
+    }
+
+    public function deleteBudgeting(string $id, BudgetService $service) {
+        $service->destroy($id);
+
         return redirect()->route('budgeting');
     }
 }
