@@ -2,17 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\TransactionResource;
-use App\Models\Budget;
-use App\Models\Category;
-use App\Models\Transaction;
 use App\Services\BudgetService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
-
-use function Termwind\render;
 
 class BudgetController extends Controller
 {

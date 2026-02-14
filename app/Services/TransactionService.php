@@ -8,7 +8,6 @@ use App\Models\Category;
 use App\Models\Transaction;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-use DomainException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
