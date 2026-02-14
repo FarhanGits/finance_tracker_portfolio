@@ -1,5 +1,13 @@
 import { Button } from '@/components/ui/button';
 import {
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from '@/components/ui/pagination';
+import {
     Select,
     SelectContent,
     SelectItem,
@@ -17,7 +25,7 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import { capitalize, formatDate, toIDR } from '@/lib/utils';
 import { cashflow } from '@/routes';
-import { BreadcrumbItem, TransactionList } from '@/types';
+import { BreadcrumbItem, Transaction } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { route } from 'ziggy-js';
@@ -30,18 +38,25 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 interface TransactionProps {
-    transactions: TransactionList[];
+    transactions: {
+        data: Transaction[];
+        links: {
+            first: string;
+            last: string;
+            next: string;
+            prev: string;
+        };
+        meta: {
+            links: {
+                active: boolean;
+                label: string;
+                url: string;
+            }[];
+        };
+    };
 
     [key: string]: unknown;
 }
-
-// type TransactionPropss = {
-//     transactions: {
-//         data: TransactionList[];
-//         links: any[];
-//         meta: any;
-//     }
-// }
 
 export default function CashFlow() {
     const { transactions } = usePage<TransactionProps>().props;
@@ -126,7 +141,7 @@ export default function CashFlow() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {transactions.map((transaction) => (
+                    {transactions.data.map((transaction) => (
                         <TableRow
                             className="text-center"
                             key={transaction.transaction_id}
@@ -167,7 +182,47 @@ export default function CashFlow() {
                     ))}
                 </TableBody>
             </Table>
-            <p className="m-4 self-center"> ... ... Pagination ... ... </p>
+
+            {/* Pagination */}
+            {transactions.meta.links.length > 3 && (
+                <Pagination className="m-4">
+                    <PaginationContent>
+                        {transactions.meta.links.map((page) => {
+                            if (page.label === 'pagination.previous') {
+                                if (page.url != null) {
+                                    return (
+                                        <PaginationItem>
+                                            <PaginationPrevious
+                                                href={page.url}
+                                            />
+                                        </PaginationItem>
+                                    );
+                                }
+                            } else if (page.label === 'pagination.next') {
+                                if (page.url != null) {
+                                    return (
+                                        <PaginationItem>
+                                            <PaginationNext href={page.url} />
+                                        </PaginationItem>
+                                    );
+                                }
+                            } else {
+                                return (
+                                    <PaginationItem className="">
+                                        <PaginationLink
+                                            href={page.url}
+                                            isActive={page.active}
+                                        >
+                                            {page.label}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                );
+                            }
+                        })}
+                    </PaginationContent>
+                </Pagination>
+            )}
+
             <Button className="m-4 w-fit cursor-pointer self-end">
                 <a href={route('export-cashflow', filters)} target="_blank">
                     Export to PDF
