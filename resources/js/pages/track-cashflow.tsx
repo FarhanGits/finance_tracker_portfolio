@@ -30,28 +30,10 @@ interface TransactionPageProps {
     [key: string]: unknown;
 }
 
-// // For Pagination Purpose
-// interface PaginationLink {
-//     url: string | null;
-//     label: string;
-//     active: boolean;
-// }
-// interface Paginated<T> {
-//     transactions: T[];
-//     links: PaginationLink[];
-
-//     [key: string]: unknown;
-// }
-
 export default function TrackCashflow() {
     const [activeTab, setActiveTab] = useState<'income' | 'expenses'>('income');
 
-    // Ambil data tanpa pagination
     const { transactions } = usePage<TransactionPageProps>().props;
-
-    // // Ambil data dengan pagination
-    // const { props } = usePage<{ data: Paginated<Transaction> }>();
-    // const { transactions, links } = props.data;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -183,27 +165,6 @@ export default function TrackCashflow() {
                                     ))}
                                 </TableBody>
                             </Table>
-
-                            {/* Pagination, RUWET 🤦 */}
-                            {/* <div className="flex gap-2">
-                                {links.map((link, i) => (
-                                    <button
-                                        key={i}
-                                        disabled={!link.url}
-                                        onClick={() =>
-                                            link.url && router.visit(link.url)
-                                        }
-                                        className={`border px-3 py-1 ${
-                                            link.active
-                                                ? 'bg-black text-white'
-                                                : ''
-                                        }`}
-                                        dangerouslySetInnerHTML={{
-                                            __html: link.label,
-                                        }}
-                                    />
-                                ))}
-                            </div> */}
                         </>
                     )}
                 </div>

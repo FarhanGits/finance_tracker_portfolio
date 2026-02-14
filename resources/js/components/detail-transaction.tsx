@@ -11,10 +11,11 @@ import {
 
 import { Button } from '@/components/ui/button';
 import { capitalize, toIDR } from '@/lib/utils';
-import { TransactionList } from '@/types';
+// import { capitalize, toIDR } from '@/lib/utils';
+import { Transaction } from '@/types';
 
 interface DetalTransactionProps {
-    transaction: TransactionList;
+    transaction: Transaction;
 
     [key: string]: unknown;
 }
@@ -32,41 +33,48 @@ export function DetailTransaction({ transaction }: DetalTransactionProps) {
                     ) : (
                         <AlertDialogTitle>Expense Detail</AlertDialogTitle>
                     )}
-                    <AlertDialogDescription
-                        className="flex flex-col gap-3 text-black"
-                        key={transaction.transaction_id}
-                    >
+                    <div className="flex flex-col gap-3">
                         <div>
-                            <p className="font-semibold">Date:</p>
-                            <p className="text-base">
+                            <AlertDialogDescription className="font-semibold text-black">
+                                Date:
+                            </AlertDialogDescription>
+                            <AlertDialogDescription className="text-base text-black">
                                 {transaction.transaction_date}
-                            </p>
+                            </AlertDialogDescription>
                         </div>
                         <div>
-                            <p className="font-semibold">Total Amount:</p>
-                            <p className="text-base">
+                            <AlertDialogDescription className="font-semibold text-black">
+                                Total Amount:
+                            </AlertDialogDescription>
+                            <AlertDialogDescription className="text-base text-black">
                                 {toIDR(transaction.transaction_amount)}
-                            </p>
+                            </AlertDialogDescription>
                         </div>
                         <div>
-                            <p className="font-semibold">Category:</p>
-                            <p className="text-base">
+                            <AlertDialogDescription className="font-semibold text-black">
+                                Category:
+                            </AlertDialogDescription>
+                            <AlertDialogDescription className="text-base text-black">
                                 {transaction.category?.category_name}
-                            </p>
+                            </AlertDialogDescription>
                         </div>
                         <div>
-                            <p className="font-semibold">Method:</p>
-                            <p className="text-base">
+                            <AlertDialogDescription className="font-semibold text-black">
+                                Method:
+                            </AlertDialogDescription>
+                            <AlertDialogDescription className="text-base text-black">
                                 {capitalize(transaction.transaction_method)}
-                            </p>
+                            </AlertDialogDescription>
                         </div>
                         <div>
-                            <p className="font-semibold">Note:</p>
-                            <p className="text-base">
+                            <AlertDialogDescription className="font-semibold text-black">
+                                Note:
+                            </AlertDialogDescription>
+                            <AlertDialogDescription className="text-base text-black">
                                 {transaction.transaction_note}
-                            </p>
+                            </AlertDialogDescription>
                         </div>
-                    </AlertDialogDescription>
+                    </div>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogAction>Cancel</AlertDialogAction>
