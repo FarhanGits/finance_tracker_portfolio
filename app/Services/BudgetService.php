@@ -3,11 +3,32 @@
 namespace App\Services;
 
 use App\Models\Budget;
+use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class BudgetService {
-    public function create(array $input) {
+    public function viewPage()
+    {
+        $user_id = Auth::user()->user_id;
+        $budgets = Budget::with('category')
+            ->where('user_id', $user_id)
+            ->where('month', now()->month)
+            ->where('year', now()->year)
+            ->get();
+        $categories = Category::all();
+        $budget_period = now()->month . '-' . now()->year;
+
+        return [
+            $user_id,
+            $budgets,
+            $categories,
+            $budget_period
+        ];
+    }
+    
+    public function create(array $input)
+    {
         $isBudgetExist = Budget::where('category_id', $input['category_id'])
             ->where('month', now()->month)
             ->where('year', now()->year)
@@ -25,7 +46,8 @@ class BudgetService {
         Budget::create($input);
     }
 
-    public function update(array $input, string $budget_id) {
+    public function update(array $input, string $budget_id)
+    {
         $budget = Budget::where('budget_id', $budget_id)->firstOrFail();
 
         foreach ($input as $key => $value) {
@@ -37,7 +59,8 @@ class BudgetService {
         $budget->update($input);
     }
 
-    public function destroy(string $budget_id) {
+    public function destroy(string $budget_id)
+    {
         $budgeting = Budget::where('budget_id', $budget_id)->firstOrFail();
         $budgeting->delete();
     }

@@ -16,15 +16,9 @@ use function Termwind\render;
 
 class BudgetController extends Controller
 {
-    public function viewBudgetingPage() {
-        $user_id = Auth::user()->user_id;
-        $budgets = Budget::with('category')
-            ->where('user_id', $user_id)
-            ->where('month', now()->month)
-            ->where('year', now()->year)
-            ->get();
-        $categories = Category::all();
-        $budget_period = now()->month . '-' . now()->year;
+    public function viewBudgetingPage(BudgetService $service) {
+        [$user_id, $budgets, $categories, $budget_period] = $service->viewPage();
+        
         return Inertia::render('budgeting', [
             'budgets' => $budgets,
             'user_id' => $user_id,
