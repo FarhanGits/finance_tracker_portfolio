@@ -12,12 +12,10 @@ use Illuminate\Support\Str;
 class CategoryController extends Controller
 {
     public function CreateCategory(Request $request, CategoryServices $service) {
-        $service->create(
-            category_id: 'CTGR-' . Str::ulid(),
-            user_id: Auth::user()->user_id,
-            category_name: $request->category_name,
-            category_type: $request->category_type
-        );
+        $input = $request->all();
+        
+        $service->create($input);
+        
         return redirect()->route('track-cashflow');
     }
 }
