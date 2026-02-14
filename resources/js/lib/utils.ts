@@ -30,11 +30,12 @@ export function toIDR(amount: number){
 }
 
 export function formatPeriod(period: string) {
-    const date = period.split('-');
-    const month = new Date(parseInt(date[0]) - 1).toLocaleDateString('en-US', {
+    const [month_str, year_str] = period.split('-');
+    const year = parseInt(year_str);
+    const month_idx = parseInt(month_str) - 1;
+    const month = new Date(year, month_idx).toLocaleDateString('en-US', {
         month: 'long',
     });
-    const year = date[1];
     const final_period = month + ' ' + year;
     return final_period;
 }

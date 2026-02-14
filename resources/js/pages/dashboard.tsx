@@ -44,8 +44,7 @@ export default function Dashboard() {
         top_expense_categories,
         top_income_categories,
     } = usePage<DashboardProps>().props;
-
-    console.log(budget_report);
+    console.log(transaction_period);
 
     // =========================================================================
     // FOR BANNER REPORT USAGE =================================================
@@ -207,7 +206,7 @@ export default function Dashboard() {
                             top_expense_categories.map(
                                 (top_expense) =>
                                     top_expense.total_amount > 0 && (
-                                        <p>
+                                        <p key={top_expense.category}>
                                             {top_expense.category}:{' '}
                                             {toIDR(top_expense.total_amount)}
                                         </p>
@@ -231,7 +230,7 @@ export default function Dashboard() {
                             top_income_categories.map(
                                 (top_income) =>
                                     top_income.total_amount > 0 && (
-                                        <p>
+                                        <p key={top_income.category}>
                                             {top_income.category}:{' '}
                                             {toIDR(top_income.total_amount)}
                                         </p>
