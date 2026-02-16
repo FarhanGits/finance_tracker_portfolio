@@ -41,7 +41,7 @@ interface BudgetProps {
 }
 
 export default function Budgeting() {
-    const { budgets, categories, user_id, budget_period } =
+    const { budgets, categories, user_id, budget_period, errors } =
         usePage<BudgetProps>().props;
 
     const {
@@ -66,7 +66,6 @@ export default function Budgeting() {
                 <h1 className="mb-4 text-center text-2xl font-bold">
                     Set your budgeting plan this month
                 </h1>
-                {/* {errors != null && <p>{errors}</p>} */}
                 <div className="flex w-full flex-col gap-5 rounded-xl border p-5">
                     <div className="flex items-center gap-1">
                         <CalendarFold />
@@ -74,6 +73,11 @@ export default function Budgeting() {
                             {formatPeriod(budget_period)}
                         </h1>
                     </div>
+                    {errors.error && (
+                        <div className="mb-4 rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
+                            {errors.error}
+                        </div>
+                    )}
                     <form onSubmit={createBudget}>
                         <FieldSet>
                             <FieldGroup className="flex flex-row">
