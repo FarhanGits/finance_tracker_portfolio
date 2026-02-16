@@ -32,7 +32,7 @@ class BudgetService {
         $isBudgetExist = Budget::where('category_id', $input['category_id'])
             ->where('month', now()->month)
             ->where('year', now()->year)
-            ->firstOrFail();
+            ->first();
         
         if($isBudgetExist) {
             return redirect()->route('budgeting')

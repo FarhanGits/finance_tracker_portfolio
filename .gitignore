@@ -26,3 +26,5 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+FUTURE_FEATURE_NOTES.md

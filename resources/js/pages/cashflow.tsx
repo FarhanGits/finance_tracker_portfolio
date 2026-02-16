@@ -121,7 +121,7 @@ export default function CashFlow() {
             </div>
             <Table className="border-t border-b">
                 <TableHeader>
-                    <TableRow className="bg-gray-50">
+                    <TableRow>
                         <TableHead className="border-r text-center">
                             Date
                         </TableHead>

@@ -49,12 +49,12 @@ const mainNavItems: NavItem[] = [
 const footerNavItems: NavItem[] = [
     {
         title: 'Repository',
-        href: 'https://github.com/FarhanGits',
+        href: 'https://github.com/FarhanGits/finance_tracker_portfolio',
         icon: Folder,
     },
     {
         title: 'Portfolio',
-        href: 'https://farhangits.github.io/Portfolio/',
+        href: 'https://drive.google.com/file/d/1YKRLSOPwhbUZJnAhrvMrc4uUhTP0WzqR/view?usp=drive_link',
         icon: FileUser,
     },
 ];
