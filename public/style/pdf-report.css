@@ -1,0 +1,79 @@
+@font-face {
+    font-family: 'NunitoSans';
+    src: ("{{ public_path(' fonts/Nunito Sans/NunitoSans-Italic-VariableFont_YTLC,opsz,wdth,wght.ttf') }}");
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'NunitoSans';
+    src: ("{{ public_path(' fonts/Nunito Sans/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf') }}");
+    font-style: normal;
+}
+
+body {
+    font-family: 'NunitoSans', sans-serif;
+}
+
+@page {
+    margin: 150px 50px 100px 50px;
+}
+
+header {
+    position: fixed;
+    top: -150px;
+    left: 0;
+    right: 0;
+    height: 100px;
+}
+
+.logo-img {
+    width: 50px;
+}
+
+.logo-text {
+    font-size: 45px;
+}
+
+.devider {
+    width: 100%;
+    top: -150px;
+    border-top: 1px solid #000;
+}
+
+footer {
+    position: fixed;
+    bottom: -100px;
+    left: 0px;
+    right: 0px;
+    height: 80px;
+    text-align: center;
+    font-size: 12px;
+}
+
+.table-data {
+    width: 100%;
+    font-size: small;
+    border-collapse: collapse;
+}
+
+.table-data thead {
+    display: table-header-group;
+}
+
+.table-data thead tr th {
+    background-color: #eeeeee;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-left: none;
+    border-right: none;
+}
+
+.table-data tbody tr td {
+    border-bottom: 1px solid #ccc;
+    border-left: none;
+    border-right: none;
+}
+
+.pagenum:before {
+    content: counter(page);
+}
