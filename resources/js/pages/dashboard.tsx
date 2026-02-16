@@ -44,7 +44,6 @@ export default function Dashboard() {
         top_expense_categories,
         top_income_categories,
     } = usePage<DashboardProps>().props;
-    console.log(transaction_period);
 
     // =========================================================================
     // FOR BANNER REPORT USAGE =================================================
@@ -140,9 +139,9 @@ export default function Dashboard() {
                 </div>
 
                 {/* Budget Breakdown */}
-                <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
-                    <p className="p-5 text-xl font-bold">Budget Breakdown</p>
-                    <div className="flex justify-around">
+                <div className="relative flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 p-5 md:min-h-min dark:border-sidebar-border">
+                    <p className="pb-5 text-xl font-bold">Budget Breakdown</p>
+                    <div className="grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2">
                         {limit_amount <= 0 ? (
                             <p className="text-sm italic">
                                 ⓘ No budget setting this month yet
@@ -158,7 +157,7 @@ export default function Dashboard() {
                                             <FieldLabel htmlFor="category-progress">
                                                 <span>
                                                     {budget.expense_category} (
-                                                    {toIDR(budget.spent)}/
+                                                    {toIDR(budget.spent)} /{' '}
                                                     {toIDR(budget.limit)})
                                                 </span>
                                                 <span className="ml-auto">
@@ -191,7 +190,7 @@ export default function Dashboard() {
                 {/* Cashflow Quick Report */}
                 <div className="flex gap-3">
                     {/* Highest Category for Expenses */}
-                    <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 p-5 md:min-h-min dark:border-sidebar-border">
+                    <div className="relative flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 p-5 md:min-h-min dark:border-sidebar-border">
                         <p className="text-lg font-medium">
                             Top Spending Categories
                         </p>
@@ -207,7 +206,7 @@ export default function Dashboard() {
                                 (top_expense) =>
                                     top_expense.total_amount > 0 && (
                                         <p key={top_expense.category}>
-                                            {top_expense.category}:{' '}
+                                            • {top_expense.category}:{' '}
                                             {toIDR(top_expense.total_amount)}
                                         </p>
                                     ),
@@ -215,7 +214,7 @@ export default function Dashboard() {
                         )}
                     </div>
                     {/* Highest Category for Income */}
-                    <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 p-5 md:min-h-min dark:border-sidebar-border">
+                    <div className="relative flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 p-5 md:min-h-min dark:border-sidebar-border">
                         <p className="text-lg font-medium">
                             Top Income Sources
                         </p>
@@ -231,7 +230,7 @@ export default function Dashboard() {
                                 (top_income) =>
                                     top_income.total_amount > 0 && (
                                         <p key={top_income.category}>
-                                            {top_income.category}:{' '}
+                                            • {top_income.category}:{' '}
                                             {toIDR(top_income.total_amount)}
                                         </p>
                                     ),
