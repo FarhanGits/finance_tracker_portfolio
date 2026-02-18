@@ -40,8 +40,8 @@
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/andrianfaa/finance-tracker-v1.git
-cd finance-tracker-v1
+git clone https://github.com/FarhanGits/finance_tracker_portfolio.git
+cd finance_tracker_portfolio
 ```
 
 ### 2. Install dependencies
@@ -63,12 +63,12 @@ php artisan key:generate
 Open the `.env` file and set your database credentials (`DB_*` variables) and other environment variables.
 
 ```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=your_database
-DB_USERNAME=root
-DB_PASSWORD=
+DB_CONNECTION=<database_options>
+DB_HOST=<host>
+DB_PORT=<port>
+DB_DATABASE=<your_database>
+DB_USERNAME=<username>
+DB_PASSWORD=<password>
 ```
 
 ### 5. Run database migrations
